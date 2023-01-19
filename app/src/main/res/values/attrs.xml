@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CaptainBarChartView">
+        <attr name="bgColor" format="color"/><!-- 自定义view背景颜色 -->
+        <attr name="rulerColor" format="color"/><!-- 标尺颜色 -->
+
+        <attr name="barUpColor" format="color"/><!-- 蜡烛涨颜色 -->
+        <attr name="barDownColor" format="color"/><!-- 蜡烛跌颜色 -->
+
+        <attr name="yRulerCount" format="integer" /><!--y轴标尺数量-->
+        <attr name="xRulerCount" format="integer" /><!--y轴标尺数量-->
+
+        <!-- x轴时间文本颜色和大小 -->
+        <attr name="xTextColor" format="color"/>
+        <attr name="xTextSize" format="dimension"/>
+
+        <!-- y轴时间文本颜色和大小 -->
+        <attr name="yTextColor" format="color"/>
+        <attr name="yTextSize" format="dimension"/>
+
+
+
+        <!-- 图形填充颜色 -->
+
+    </declare-styleable>
+
+</resources>
