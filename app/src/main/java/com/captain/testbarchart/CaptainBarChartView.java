@@ -27,8 +27,8 @@ public class CaptainBarChartView extends View {
     private int mAttrRulerColor;
     private int mAttrBarUpColor;
     private int mAttrBarDownColor;
-    private int mAttrYRulerCount;//y轴上的横线个数
-    private int mAttrXRulerCount;//x轴上的竖线个数
+    private int mAttrYRulerCount;
+    private int mAttrXRulerCount;
 
     private int mAttrXTextColor;
     private int mAttrXTextSize;
@@ -41,28 +41,28 @@ public class CaptainBarChartView extends View {
     private Paint mPaintXText;
     private Paint mPaintYText;
 
-    private int mPaddingBoottomTextToTable = dp2px(30);//底部文本到表格的距离
-    private int mPaddingStartTextToTable = dp2px(22);//左边文本到表格的距离
-    private int mViewStartToTable = dp2px(120);// = 自定义view左边届到表格预留的宽度 - paddingLeft
-    private int mViewEndToTable = dp2px(10);// = 自定义view右边届到表格预留的宽度 - paddingright
-    private int mViewBottomToTable = dp2px(50);// = 自定义view底部边届到表格预留的宽度 - paddingBottom
+    private int mPaddingBoottomTextToTable = dp2px(30);
+    private int mPaddingStartTextToTable = dp2px(22);
+    private int mViewStartToTable = dp2px(120);
+    private int mViewEndToTable = dp2px(10);
+    private int mViewBottomToTable = dp2px(50);
 
-    private int mBarStartToTable = dp2px(5);//表格上面显示信息的区域高度
-    private int mTopDisplaySpace = dp2px(50);//表格上面显示信息的区域高度
-    private int mHorRulerGapSize; //y轴横线标尺间隔
-    private int mVerRulerGapSize; //x轴竖线标尺间隙
-    private float mBarWithGapWidth; //= 蜡烛宽度 + 两根蜡烛间隙宽度
+    private int mBarStartToTable = dp2px(5);
+    private int mTopDisplaySpace = dp2px(50);
+    private int mHorRulerGapSize;
+    private int mVerRulerGapSize;
+    private float mBarWithGapWidth;
 
-    private float mBarWidth = dp2px(10);//蜡烛宽度
-    private int mBarGapWidth = dp2px(4);//蜡烛间隙宽度
-    private int mBarNum;//蜡烛数量 = 蜡烛数据集合的size
+    private float mBarWidth = dp2px(10);
+    private int mBarGapWidth = dp2px(4);
+    private int mBarNum;
     private int mTableHeight;
     private int mTableWidth;
-    double mMax;//表格y轴最大值
-    double mMin;//表格y轴最小值
+    double mMax;
+    double mMin;
 
 
-    private ArrayList<BarModel> mDatas = new ArrayList();//外部传入的蜡烛图数据
+    private ArrayList<BarModel> mDatas = new ArrayList();
 //    private ArrayList<String> mTimeDatas = new ArrayList();
     private ArrayList<String> mValueDatas = new ArrayList();
 
@@ -94,7 +94,7 @@ public class CaptainBarChartView extends View {
             allTimesData.add(datas.get(i).getHighPrice());
             allTimesData.add(datas.get(i).getLowPrice());
         }
-        Double[] values = getNeedValues(allTimesData);//获取y轴坐标的最大和最小值
+        Double[] values = getNeedValues(allTimesData);
         if(values != null){
             double gap = (values[0] - values[1])/(mAttrYRulerCount-1);
             for(int i = 0; i < mAttrYRulerCount; i++){
@@ -154,14 +154,11 @@ public class CaptainBarChartView extends View {
         translationFromX_Y(canvas, mViewStartToTable + mBarStartToTable, mTopDisplaySpace, ()->{
             for(int i = 0; i < datas.size(); i++){
                 float left = i * (mBarWidth + mBarGapWidth);
-
-                float currentBarApexPercent = (float) ((mMax - datas.get(i).getHighPrice())/(mMax -mMin));//当前点最高点占表格高度的比
+                float currentBarApexPercent = (float) ((mMax - datas.get(i).getHighPrice())/(mMax -mMin));
                 float top = currentBarApexPercent * mTableHeight;
-
                 float right = left + mBarWidth;
-
                 float highLowGap = (float) (datas.get(i).getHighPrice() - datas.get(i).getLowPrice());
-                float currentBarHeightPercent = (float) (highLowGap/(mMax -mMin));//当前bar高度占表格高度的比
+                float currentBarHeightPercent = (float) (highLowGap/(mMax -mMin));
                 float currentBarHeght = currentBarHeightPercent * mTableHeight;
                 float bottom = top + currentBarHeght;
                 if(datas.get(i).isPirceUp()){
@@ -169,8 +166,6 @@ public class CaptainBarChartView extends View {
                 }else{
                     canvas.drawRect(left, top, right, bottom, mPaintBarDown);
                 }
-
-                //绘制x轴文字
                 if(datas.get(i).isDrawTime()){
                     String time = datas.get(i).getTradeDate();
                     String afterCutTime = time.substring(4, 8);
@@ -187,7 +182,7 @@ public class CaptainBarChartView extends View {
     }
 
     private void drawYAxisText(Canvas canvas, ArrayList<String> datas) {
-        //绘制y轴上的文本
+
         translationFromX_Y(canvas, mViewStartToTable, mTopDisplaySpace, ()->{
             for(int i = mAttrYRulerCount - 1; i >= 0; i--){
                 float x = -(getTextWidth(datas.get(i), mPaintYText)) - mPaddingStartTextToTable;
@@ -197,7 +192,6 @@ public class CaptainBarChartView extends View {
     }
 
     private void drawTable(Canvas canvas){
-        //绘制横线
         translationFromX_Y(canvas, mViewStartToTable, mTopDisplaySpace, ()->{
             for(int i = 0; i < mAttrYRulerCount; i++){
                 canvas.drawLine(0f, i*mHorRulerGapSize, mTableWidth, i*mHorRulerGapSize, mPaintRuler);
@@ -234,18 +228,7 @@ public class CaptainBarChartView extends View {
         super.onLayout(changed, left, top, right, bottom);
         mTableWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight() - mViewStartToTable - mViewEndToTable;
         mTableHeight = getMeasuredHeight() - getPaddingTop() - getPaddingBottom()  - mTopDisplaySpace - mViewBottomToTable;
-        //获取y轴两根横线之间的距离
         mHorRulerGapSize = mTableHeight / (mAttrYRulerCount - 1);
-
-//        //获取x轴两根竖线之间的距离
-//        mVerRulerGapSize = mTableHeight / (mAttrXRulerCount - 1);
-//        //获取蜡烛+蜡烛间隙的宽度
-//        mBarWithGapWidth = (float)mTableWidth / mBarNum;
-//        //获取蜡烛的宽度
-//        mBarWidth = mBarWithGapWidth - mBarGapWidth;
-
-
-
     }
 
 
