@@ -170,9 +170,9 @@ public class CaptainBarChartView extends View {
 
     }
 
-    //@return index = -1 表示点击的位置不在该bar矩形里面，而在bar的矩形之外
+
     private int getClickedBarIndex(ArrayList<BarModel> datas, float onKeyDownX, float onKeyDownY){
-        int index = -1;//当触摸点的位置不在bar矩形区域内的话,值为-1,否则值为0
+        int index = -1;
         boolean isCompareOnKeyDownY = false;
         for(int i = 0; i < datas.size(); i++){
             float left = i * (mBarWidth + mBarGapWidth);
@@ -184,17 +184,17 @@ public class CaptainBarChartView extends View {
                 isCompareOnKeyDownY = true;
             }
             if(isCompareOnKeyDownY){
-                float currentBarApexPercent = (float) ((mMax - datas.get(i).getHighPrice())/(mMax -mMin));//当前点最高点占表格高度的比
+                float currentBarApexPercent = (float) ((mMax - datas.get(i).getHighPrice())/(mMax -mMin));
                 float top = currentBarApexPercent * mTableHeight;
                 float topHInView = top + mTopDisplaySpace + getPaddingTop();
 
                 float highLowGap = (float) (datas.get(i).getHighPrice() - datas.get(i).getLowPrice());
-                float currentBarHeightPercent = (float) (highLowGap/(mMax -mMin));//当前bar高度占表格高度的比
+                float currentBarHeightPercent = (float) (highLowGap/(mMax -mMin));
                 float currentBarHeght = currentBarHeightPercent * mTableHeight;
                 float bottom = top + currentBarHeght;
                 float bottomHInView = bottom + mTopDisplaySpace + getPaddingTop();
 
-                if(onKeyDownY < topHInView || onKeyDownY > bottomHInView){//当触摸的位置在bar矩形的上面或者下面,总之不在里面时候
+                if(onKeyDownY < topHInView || onKeyDownY > bottomHInView){
                     index = -1;
                 }
                 if(index != -1) return index;
