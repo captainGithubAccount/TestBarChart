@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.ColorInt;
@@ -66,12 +68,20 @@ public class CaptainBarChartView extends View {
 //    private ArrayList<String> mTimeDatas = new ArrayList();
     private ArrayList<String> mValueDatas = new ArrayList();
 
-    public void setDatas( ArrayList<BarModel> datas){
+    public void setDatas(ArrayList<BarModel> datas){
         mDatas = datas;
         if(mDatas.size() > 0){
             convertDataToNeed(mDatas);
         }
         postInvalidate();
+    }
+
+    public void setBarClickListener(BarClickListener barClickListener){
+        mBarClickListener = barClickListener;
+    }
+    BarClickListener mBarClickListener;
+    interface BarClickListener{
+        void onClickBar(BarModel barModel, int index, boolean isClickUseful);
     }
 
     public void convertDataToNeed(ArrayList<BarModel> datas){
@@ -135,6 +145,62 @@ public class CaptainBarChartView extends View {
 
     private Double getMax(Double max, Double e) {
         return max > e ? max : e;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                float y = event.getY();
+                float x = event.getX();
+                int index = getClickedBarIndex(mDatas, x, y);
+                Log.d("TAG-index", "index: "+index);
+                if(index != -1){
+                    mBarClickListener.onClickBar(mDatas.get(index), index, index != -1);
+                }else{
+                    mBarClickListener.onClickBar(null, -1, index != -1);
+                }
+
+                break;
+
+            default: break;
+
+        }
+        return true;
+
+    }
+
+    //@return index = -1 表示点击的位置不在该bar矩形里面，而在bar的矩形之外
+    private int getClickedBarIndex(ArrayList<BarModel> datas, float onKeyDownX, float onKeyDownY){
+        int index = -1;//当触摸点的位置不在bar矩形区域内的话,值为-1,否则值为0
+        boolean isCompareOnKeyDownY = false;
+        for(int i = 0; i < datas.size(); i++){
+            float left = i * (mBarWidth + mBarGapWidth);
+            float leftInView = left + mViewStartToTable + mBarStartToTable + getPaddingLeft();
+            float right = left + mBarWidth;
+            float rightInView = right + mViewStartToTable + mBarStartToTable + getPaddingLeft();
+            if(leftInView< onKeyDownX  && onKeyDownX < rightInView){
+                index = i;
+                isCompareOnKeyDownY = true;
+            }
+            if(isCompareOnKeyDownY){
+                float currentBarApexPercent = (float) ((mMax - datas.get(i).getHighPrice())/(mMax -mMin));//当前点最高点占表格高度的比
+                float top = currentBarApexPercent * mTableHeight;
+                float topHInView = top + mTopDisplaySpace + getPaddingTop();
+
+                float highLowGap = (float) (datas.get(i).getHighPrice() - datas.get(i).getLowPrice());
+                float currentBarHeightPercent = (float) (highLowGap/(mMax -mMin));//当前bar高度占表格高度的比
+                float currentBarHeght = currentBarHeightPercent * mTableHeight;
+                float bottom = top + currentBarHeght;
+                float bottomHInView = bottom + mTopDisplaySpace + getPaddingTop();
+
+                if(onKeyDownY < topHInView || onKeyDownY > bottomHInView){//当触摸的位置在bar矩形的上面或者下面,总之不在里面时候
+                    index = -1;
+                }
+                if(index != -1) return index;
+            }
+        }
+        return index;
     }
 
 
