@@ -4,15 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
+
+    <LinearLayout
+
+        android:paddingVertical="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvHighPrive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/tvLowPrive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/tvTip"
+            android:visibility="gone"
+            android:text="您点击位置无效,请点击有效位置!!!"
+            android:textSize="30sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
     <com.captain.testbarchart.CaptainBarChartView
         android:id="@+id/cvTest"
 
-        android:layout_marginTop="150dp"
         android:layout_width="match_parent"
-        android:layout_height="500dp"/>
+        android:layout_height="wrap_content" />
 
 
 </LinearLayout>

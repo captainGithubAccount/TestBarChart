@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">TestBarChart</string>
+
+    <string name="highPrice"><font color = "red">HighPrice:</font>%1$s</string>
+    <string name="lowPrice"><font color = "red">LowPrice:</font>%1$s</string>
+    <string name="date"><font color = "red">Date:</font>%1$s</string>
 </resources>
